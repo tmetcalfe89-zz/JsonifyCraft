@@ -1,6 +1,7 @@
 package us.timinc.jsonifycraft.json.world;
 
 import net.minecraft.item.*;
+import us.timinc.jsonifycraft.*;
 import us.timinc.jsonifycraft.json.*;
 
 public class FoodDescription extends ItemDescription {
@@ -17,6 +18,8 @@ public class FoodDescription extends ItemDescription {
 	public Item getItem() {
 		if (item == null) {
 			item = new ItemFood(hunger, saturation, wolfFood);
+
+			item.setCreativeTab(JsonifyCraft.REGISTRIES.getCreativeTab(creativeTab));
 
 			if (effect != null) {
 				item.setPotionEffect(effect.getPotionEffect(), effectChance);
