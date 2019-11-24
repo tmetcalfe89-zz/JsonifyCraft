@@ -5,23 +5,24 @@ import net.minecraft.item.*;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import us.timinc.calc.*;
+import us.timinc.jsonifycraft.*;
 import us.timinc.jsonifycraft.event.*;
 import us.timinc.mcutil.*;
 
 public class EmitParticlesDescription extends WorldBehaviorDescription {
+	public String particle;
 	public int count = 15;
-	public String particleArea = "out";
-	public String particleType = "happyVillager";
+	public String area = "out";
 
 	@Override
-	public void behave(EventDescription event) {
+	public void behave(EventContext event) {
 		BlockPos pos = getPos(event);
-		IBlockState targetBlock = event.world.getBlockState(pos);
+		IBlockState targetBlock = event.getBlockState(pos);
 
-		log("Emitting %s %s particles at %s.", count, particleType, pos.toString());
+		log("Emitting %s %s particles at %s.", count, particle, pos.toString());
 		for (int i = 0; i < count; i++) {
-			double[] particlePosition = getParticlePosition(pos, particleArea);
-			event.world.spawnParticle(EnumParticleTypes.getByName(getParticleName()), particlePosition[0],
+			double[] particlePosition = getParticlePosition(pos, area);
+			event.world.spawnParticle(JsonifyCraft.REGISTRIES.getParticleType(getParticleName()), particlePosition[0],
 					particlePosition[1], particlePosition[2], (float) Math.random() * 0.02D,
 					(float) Math.random() * 0.02D, (float) Math.random() * 0.02D,
 					getParticleParam(targetBlock).isEmpty() ? 0
@@ -36,7 +37,7 @@ public class EmitParticlesDescription extends WorldBehaviorDescription {
 	 * @return The name of the particle to spawn.
 	 */
 	public String getParticleName() {
-		String[] splitParticleType = particleType.split(":");
+		String[] splitParticleType = particle.split(":");
 		return splitParticleType[0];
 	}
 
@@ -46,7 +47,7 @@ public class EmitParticlesDescription extends WorldBehaviorDescription {
 	 * @return The parameters needed to spawn this particle.
 	 */
 	public String getParticleParam(IBlockState backup) {
-		String[] splitParticleType = particleType.split(":");
+		String[] splitParticleType = particle.split(":");
 		if (splitParticleType.length == 1)
 			return PlaintextId.getBlockId(backup);
 		return (splitParticleType[1] + ":" + splitParticleType[2] + ":" + splitParticleType[3]);

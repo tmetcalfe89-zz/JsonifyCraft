@@ -10,7 +10,7 @@ public class HeldItemDescription extends ConditionDescription {
 	public String item;
 
 	@Override
-	public boolean evaluate(EventDescription event) {
+	public boolean evaluate(EventContext event) {
 		ItemStack heldItem = PlaintextHelp.getHeldItem(event.player, hand);
 		String itemId = PlaintextId.getItemId(heldItem);
 		boolean result = PlaintextId.matches(item, itemId);

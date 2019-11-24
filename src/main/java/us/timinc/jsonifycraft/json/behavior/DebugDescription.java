@@ -7,8 +7,8 @@ public class DebugDescription extends BehaviorDescription {
 	public String message = "";
 
 	@Override
-	public void behave(EventDescription event) {
-		if (event.world.isRemote)
+	public void behave(EventContext event) {
+		if (event.isRemote())
 			return;
 		log("Debug: " + message);
 	}

@@ -7,9 +7,9 @@ import us.timinc.calc.*;
 import us.timinc.jsonifycraft.json.*;
 
 public abstract class WorldConditionDescription extends ConditionDescription {
-	public String pos_x = "event_x";
-	public String pos_y = "event_y";
-	public String pos_z = "event_z";
+	public String pos_x = "block_x";
+	public String pos_y = "block_y";
+	public String pos_z = "block_z";
 
 	private transient BlockPos pos = null;
 

@@ -7,19 +7,19 @@ import us.timinc.mcutil.*;
 
 public class GrowTreeDescription extends WorldBehaviorDescription {
 	public String leaf = "minecraft:leaves:0";
-	public String wood = "minecraft:log:0";
+	public String log = "minecraft:log:0";
 	public int height = 5;
 	public boolean vines = false;
 
 	private transient WorldGenTrees treeGenerator = null;
 
 	@Override
-	public void behave(EventDescription event) {
+	public void behave(EventContext event) {
 		if (event.world.isRemote)
 			return;
 
 		if (treeGenerator == null) {
-			treeGenerator = new WorldGenTrees(true, height, PlaintextId.getBlockStateFrom(wood),
+			treeGenerator = new WorldGenTrees(true, height, PlaintextId.getBlockStateFrom(log),
 					PlaintextId.getBlockStateFrom(leaf), vines);
 		}
 		BlockPos pos = getPos(event);

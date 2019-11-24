@@ -5,13 +5,13 @@ import us.timinc.jsonifycraft.json.*;
 
 public class RollDiceDescription extends ConditionDescription {
 	public int sides = 6;
-	public int roll = 1;
+	public int target = 1;
 
 	@Override
-	public boolean evaluate(EventDescription event) {
+	public boolean evaluate(EventContext event) {
 		int rolled = event.world.rand.nextInt(sides);
-		boolean retval = rolled < roll;
-		log("Dice roll: %s/%s, target <%s.", rolled, sides, roll);
+		boolean retval = rolled < target;
+		log("Dice roll: %s/%s, target <%s.", rolled, sides, target);
 		return retval;
 	}
 }

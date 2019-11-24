@@ -11,23 +11,20 @@ import net.minecraft.util.*;
 
 public class Registries {
 	private HashMap<String, CreativeTabs> creativeTabs = new HashMap<>();
-	private HashMap<String, Material> materials = new HashMap<>();
+	private HashMap<String, Material> blockMaterials = new HashMap<>();
 	private HashMap<String, SoundType> soundTypes = new HashMap<>();
 	private HashMap<String, SoundEvent> sounds = new HashMap<>();
 	private HashMap<String, Potion> effects = new HashMap<>();
+	private HashMap<String, EnumParticleTypes> particleTypes = new HashMap<>();
+	private HashMap<String, SoundCategory> soundCategories = new HashMap<>();
 
 	public Registries() {
 		registerVanillaCreativeTabs();
-		registerVanillaMaterials();
+		registerVanillaBlockMaterials();
 		registerVanillaSoundTypes();
 		registerVanillaSounds();
 		registerVanillaEffects();
-	}
-
-	private void registerVanillaCreativeTabs() {
-		for (CreativeTabs creativeTab : CreativeTabs.CREATIVE_TAB_ARRAY) {
-			registerCreativeTab(creativeTab.getTabLabel(), creativeTab);
-		}
+		registerVanillaParticleTypes();
 	}
 
 	public void registerCreativeTab(String label, CreativeTabs creativeTab) {
@@ -38,52 +35,66 @@ public class Registries {
 		return creativeTabs.get(label);
 	}
 
-	private void registerVanillaMaterials() {
-		registerMaterial("AIR", Material.AIR);
-		registerMaterial("GRASS", Material.GRASS);
-		registerMaterial("GROUND", Material.GROUND);
-		registerMaterial("WOOD", Material.WOOD);
-		registerMaterial("ROCK", Material.ROCK);
-		registerMaterial("IRON", Material.IRON);
-		registerMaterial("ANVIL", Material.ANVIL);
-		registerMaterial("WATER", Material.WATER);
-		registerMaterial("LAVA", Material.LAVA);
-		registerMaterial("LEAVES", Material.LEAVES);
-		registerMaterial("PLANTS", Material.PLANTS);
-		registerMaterial("VINE", Material.VINE);
-		registerMaterial("SPONGE", Material.SPONGE);
-		registerMaterial("CLOTH", Material.CLOTH);
-		registerMaterial("FIRE", Material.FIRE);
-		registerMaterial("SAND", Material.SAND);
-		registerMaterial("CIRCUITS", Material.CIRCUITS);
-		registerMaterial("CARPET", Material.CARPET);
-		registerMaterial("GLASS", Material.GLASS);
-		registerMaterial("REDSTONE_LIGHT", Material.REDSTONE_LIGHT);
-		registerMaterial("TNT", Material.TNT);
-		registerMaterial("CORAL", Material.CORAL);
-		registerMaterial("ICE", Material.ICE);
-		registerMaterial("PACKED_ICE", Material.PACKED_ICE);
-		registerMaterial("SNOW", Material.SNOW);
-		registerMaterial("CRAFTED_SNOW", Material.CRAFTED_SNOW);
-		registerMaterial("CACTUS", Material.CACTUS);
-		registerMaterial("CLAY", Material.CLAY);
-		registerMaterial("GOURD", Material.GOURD);
-		registerMaterial("DRAGON_EGG", Material.DRAGON_EGG);
-		registerMaterial("PORTAL", Material.PORTAL);
-		registerMaterial("CAKE", Material.CAKE);
-		registerMaterial("WEB", Material.WEB);
-		registerMaterial("PISTON", Material.PISTON);
-		registerMaterial("BARRIER", Material.BARRIER);
-		registerMaterial("STRUCTURE_VOID", Material.STRUCTURE_VOID);
+	private void registerVanillaCreativeTabs() {
+		for (CreativeTabs creativeTab : CreativeTabs.CREATIVE_TAB_ARRAY) {
+			registerCreativeTab(creativeTab.getTabLabel().toUpperCase(), creativeTab);
+		}
+	}
+
+	public void registerBlockMaterial(String label, Material material) {
+		blockMaterials.put(label, material);
+	}
+
+	public Material getBlockMaterial(String name) {
+		return blockMaterials.get(name);
+	}
+
+	private void registerVanillaBlockMaterials() {
+		registerBlockMaterial("AIR", Material.AIR);
+		registerBlockMaterial("GRASS", Material.GRASS);
+		registerBlockMaterial("GROUND", Material.GROUND);
+		registerBlockMaterial("WOOD", Material.WOOD);
+		registerBlockMaterial("ROCK", Material.ROCK);
+		registerBlockMaterial("IRON", Material.IRON);
+		registerBlockMaterial("ANVIL", Material.ANVIL);
+		registerBlockMaterial("WATER", Material.WATER);
+		registerBlockMaterial("LAVA", Material.LAVA);
+		registerBlockMaterial("LEAVES", Material.LEAVES);
+		registerBlockMaterial("PLANTS", Material.PLANTS);
+		registerBlockMaterial("VINE", Material.VINE);
+		registerBlockMaterial("SPONGE", Material.SPONGE);
+		registerBlockMaterial("CLOTH", Material.CLOTH);
+		registerBlockMaterial("FIRE", Material.FIRE);
+		registerBlockMaterial("SAND", Material.SAND);
+		registerBlockMaterial("CIRCUITS", Material.CIRCUITS);
+		registerBlockMaterial("CARPET", Material.CARPET);
+		registerBlockMaterial("GLASS", Material.GLASS);
+		registerBlockMaterial("REDSTONE_LIGHT", Material.REDSTONE_LIGHT);
+		registerBlockMaterial("TNT", Material.TNT);
+		registerBlockMaterial("CORAL", Material.CORAL);
+		registerBlockMaterial("ICE", Material.ICE);
+		registerBlockMaterial("PACKED_ICE", Material.PACKED_ICE);
+		registerBlockMaterial("SNOW", Material.SNOW);
+		registerBlockMaterial("CRAFTED_SNOW", Material.CRAFTED_SNOW);
+		registerBlockMaterial("CACTUS", Material.CACTUS);
+		registerBlockMaterial("CLAY", Material.CLAY);
+		registerBlockMaterial("GOURD", Material.GOURD);
+		registerBlockMaterial("DRAGON_EGG", Material.DRAGON_EGG);
+		registerBlockMaterial("PORTAL", Material.PORTAL);
+		registerBlockMaterial("CAKE", Material.CAKE);
+		registerBlockMaterial("WEB", Material.WEB);
+		registerBlockMaterial("PISTON", Material.PISTON);
+		registerBlockMaterial("BARRIER", Material.BARRIER);
+		registerBlockMaterial("STRUCTURE_VOID", Material.STRUCTURE_VOID);
 
 	}
 
-	public void registerMaterial(String label, Material material) {
-		materials.put(label, material);
+	public void registerSoundType(String soundTypeName, SoundType soundType) {
+		soundTypes.put(soundTypeName, soundType);
 	}
 
-	public Material getMaterial(String name) {
-		return materials.get(name);
+	public SoundType getSoundType(String soundType) {
+		return soundTypes.get(soundType);
 	}
 
 	private void registerVanillaSoundTypes() {
@@ -99,14 +110,6 @@ public class Registries {
 		registerSoundType("LADDER", SoundType.LADDER);
 		registerSoundType("ANVIL", SoundType.ANVIL);
 		registerSoundType("SLIME", SoundType.SLIME);
-	}
-
-	public void registerSoundType(String soundTypeName, SoundType soundType) {
-		soundTypes.put(soundTypeName, soundType);
-	}
-
-	public SoundType getSoundType(String soundType) {
-		return soundTypes.get(soundType);
 	}
 
 	public void registerSound(String soundName, SoundEvent sound) {
@@ -670,6 +673,14 @@ public class Registries {
 
 	}
 
+	public void registerEffect(String name, Potion effect) {
+		effects.put(name, effect);
+	}
+
+	public Potion getEffect(String effect) {
+		return effects.get(effect);
+	}
+
 	private void registerVanillaEffects() {
 		registerEffect("SPEED", MobEffects.SPEED);
 		registerEffect("SLOWNESS", MobEffects.SLOWNESS);
@@ -700,11 +711,33 @@ public class Registries {
 		registerEffect("UNLUCK", MobEffects.UNLUCK);
 	}
 
-	public void registerEffect(String name, Potion effect) {
-		effects.put(name, effect);
+	public void registerParticleType(String key, EnumParticleTypes value) {
+		particleTypes.put(key, value);
 	}
 
-	public Potion getEffect(String effect) {
-		return effects.get(effect);
+	public EnumParticleTypes getParticleType(String key) {
+		return particleTypes.get(key);
+	}
+
+	private void registerVanillaParticleTypes() {
+		Set<String> vanillaNames = EnumParticleTypes.getParticleNames();
+		for (String name : vanillaNames) {
+			registerParticleType(name.toUpperCase(), EnumParticleTypes.getByName(name));
+		}
+	}
+
+	public void registerSoundCategory(String key, SoundCategory value) {
+		soundCategories.put(key, value);
+	}
+
+	public SoundCategory getSoundCategory(String key) {
+		return soundCategories.get(key);
+	}
+
+	private void registerVanillaSoundCategories() {
+		Set<String> vanillaNames = SoundCategory.getSoundCategoryNames();
+		for (String name : vanillaNames) {
+			registerSoundCategory(name.toUpperCase(), SoundCategory.getByName(name));
+		}
 	}
 }

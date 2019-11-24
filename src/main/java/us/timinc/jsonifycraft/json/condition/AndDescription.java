@@ -9,7 +9,7 @@ public class AndDescription extends ConditionDescription {
 	ConditionDescription[] conditions = null;
 
 	@Override
-	public boolean evaluate(EventDescription event) {
+	public boolean evaluate(EventContext event) {
 		log("-=-and start-=-");
 		boolean retval = Arrays.stream(conditions).allMatch(e -> e.evaluate(event));
 		log("-=-and end-=-");

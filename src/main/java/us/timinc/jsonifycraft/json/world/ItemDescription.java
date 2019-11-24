@@ -5,6 +5,7 @@ import us.timinc.jsonifycraft.world.*;
 
 public class ItemDescription extends WorldObjectDescription {
 	public int durability = 0;
+	public int stacksize = 64;
 
 	private transient Item item = null;
 

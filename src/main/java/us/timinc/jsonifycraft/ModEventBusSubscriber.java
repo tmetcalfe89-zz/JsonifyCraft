@@ -1,11 +1,9 @@
 package us.timinc.jsonifycraft;
 
 import net.minecraft.block.*;
-import net.minecraft.entity.player.*;
 import net.minecraft.item.*;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
-import net.minecraft.world.*;
 import net.minecraftforge.event.*;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.fml.common.*;
@@ -36,14 +34,12 @@ public class ModEventBusSubscriber {
 			return;
 
 		RayTraceResult raytraceresult = MinecraftUtil.rayTrace(event.getWorld(), event.getEntityPlayer(), true);
-		BlockPos rtpos = raytraceresult.getBlockPos();
+		BlockPos rtPos = raytraceresult.getBlockPos();
 
-		processEvent(event.getWorld(), event.getEntityPlayer(), event.getPos(), rtpos, "iteminteractblock");
-	}
+		EventContext eventContext = new EventContext(event.getWorld(), event.getEntityPlayer());
+		eventContext.addPosition("block", event.getPos());
+		eventContext.addPosition("rt", rtPos);
 
-	private static void processEvent(World world, EntityPlayer player, BlockPos pos, BlockPos rtpos, String eventName) {
-		EventDescription eventDescription = new EventDescription(world, player, pos, rtpos);
-		EventProcessor.process(eventDescription, DescriptionLoader.gameObjects.stream()
-				.filter(e -> e instanceof ReactorDescription).toArray(ReactorDescription[]::new), eventName);
+		EventProcessor.process(eventContext, DescriptionLoader.getReactors(), "playerinteractblock");
 	}
 }

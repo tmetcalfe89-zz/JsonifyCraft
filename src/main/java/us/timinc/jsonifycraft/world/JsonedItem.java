@@ -7,6 +7,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.*;
 import us.timinc.jsonifycraft.*;
 import us.timinc.jsonifycraft.event.*;
+import us.timinc.jsonifycraft.json.*;
 import us.timinc.jsonifycraft.json.world.*;
 
 public class JsonedItem extends Item {
@@ -23,28 +24,24 @@ public class JsonedItem extends Item {
 		if (itemJson.durability > 0) {
 			setMaxDamage(itemJson.durability);
 		}
-	}
-
-	public boolean hasFlag(String string) {
-		return itemJson.hasFlag(string);
+		setMaxStackSize(itemJson.stacksize);
 	}
 
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand,
+	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos blockPos, EnumHand hand,
 			EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if ((itemJson == null) || (hand != EnumHand.MAIN_HAND))
-			return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+			return super.onItemUse(player, world, blockPos, hand, facing, hitX, hitY, hitZ);
 
-		RayTraceResult raytraceresult = rayTrace(worldIn, player, true);
-		BlockPos rtpos = raytraceresult.getBlockPos();
+		RayTraceResult raytraceresult = rayTrace(world, player, true);
+		BlockPos raytracePos = raytraceresult.getBlockPos();
 
-		processEvent(worldIn, player, pos, rtpos, "iteminteractblock");
+		EventContext eventContext = new EventContext(world);
+		eventContext.addPosition("block", blockPos);
+		eventContext.addPosition("rt", raytracePos);
+		
+		EventProcessor.process(eventContext, DescriptionLoader.getReactors(), "iteminteractblock");
 
-		return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
-	}
-
-	private void processEvent(World world, EntityPlayer player, BlockPos pos, BlockPos rtpos, String eventName) {
-		EventDescription eventDescription = new EventDescription(world, player, pos, rtpos);
-		EventProcessor.process(eventDescription, itemJson.events, eventName);
+		return super.onItemUse(player, world, blockPos, hand, facing, hitX, hitY, hitZ);
 	}
 }

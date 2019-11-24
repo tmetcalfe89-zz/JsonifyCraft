@@ -9,7 +9,7 @@ public class NotDescription extends ConditionDescription {
 	ConditionDescription[] conditions = null;
 
 	@Override
-	public boolean evaluate(EventDescription event) {
+	public boolean evaluate(EventContext event) {
 		log("-=-not start-=-");
 		boolean retval = !Arrays.stream(conditions).anyMatch(e -> e.evaluate(event));
 		log("-=-not end-=-");

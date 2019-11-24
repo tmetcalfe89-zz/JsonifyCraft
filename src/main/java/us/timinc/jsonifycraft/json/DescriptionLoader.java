@@ -79,4 +79,8 @@ public class DescriptionLoader {
 		});
 	}
 
+	public static ReactorDescription[] getReactors() {
+		return gameObjects.stream().filter(e -> e instanceof ReactorDescription).toArray(ReactorDescription[]::new);
+	}
+
 }

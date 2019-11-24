@@ -11,10 +11,10 @@ import us.timinc.mcutil.*;
 
 public class BlockDescription extends WorldObjectDescription {
 	public String material = "GROUND";
-	public float hardness = 3.5F;
-	public float resistance = 5.0f;
+	public float hardness = 0;
+	public float resistance = 0;
 	public float slipperiness = 0.6F;
-	public float lightLevel = 0;
+	public int lightLevel = 0;
 	public int lightOpacity = 0;
 	public String boundingBox = "";
 	public String harvester = "";

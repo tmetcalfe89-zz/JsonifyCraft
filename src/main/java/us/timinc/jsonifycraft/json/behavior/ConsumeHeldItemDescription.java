@@ -10,7 +10,7 @@ public class ConsumeHeldItemDescription extends BehaviorDescription {
 	public int amount = 1;
 
 	@Override
-	public void behave(EventDescription event) {
+	public void behave(EventContext event) {
 		ItemStack heldItem = PlaintextHelp.getHeldItem(event.player, hand);
 		log("Consuming %s of item in %s hand.", amount, hand);
 		heldItem.shrink(amount);

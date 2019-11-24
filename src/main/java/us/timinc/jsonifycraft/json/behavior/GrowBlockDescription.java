@@ -6,19 +6,23 @@ import net.minecraft.util.math.*;
 import us.timinc.jsonifycraft.event.*;
 
 public class GrowBlockDescription extends WorldBehaviorDescription {
+	public int stages = 1;
+
 	@Override
-	public void behave(EventDescription event) {
+	public void behave(EventContext event) {
 		BlockPos pos = getPos(event);
-		IBlockState iblockstate = event.world.getBlockState(pos);
+		IBlockState iblockstate = event.getBlockState(pos);
 
 		if (iblockstate.getBlock() instanceof IGrowable) {
 			IGrowable igrowable = (IGrowable) iblockstate.getBlock();
 
-			if (igrowable.canGrow(event.world, pos, iblockstate, event.world.isRemote)) {
-				log("Attempted to grow growable block that can no longer grow at %s.", pos.toString());
-				if (!event.world.isRemote) {
-					log("Growing block at %s.", pos.toString());
-					igrowable.grow(event.world, event.world.rand, pos, iblockstate);
+			for (int i = 0; i <= stages; i++) {
+				if (igrowable.canGrow(event.world, pos, iblockstate, event.world.isRemote)) {
+					log("Attempted to grow growable block that can no longer grow at %s.", pos.toString());
+					if (!event.world.isRemote) {
+						log("Growing block at %s.", pos.toString());
+						igrowable.grow(event.world, event.world.rand, pos, iblockstate);
+					}
 				}
 			}
 		} else {

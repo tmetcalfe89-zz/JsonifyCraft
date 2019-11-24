@@ -1,6 +1,5 @@
 package us.timinc.jsonifycraft.json.behavior;
 
-import net.minecraft.init.*;
 import net.minecraft.util.math.*;
 import us.timinc.grabbag.*;
 import us.timinc.jsonifycraft.event.*;
@@ -15,7 +14,7 @@ public class GrowMarbleTreeDescription extends WorldBehaviorDescription {
 	private transient MarbleWorldGenTrees treeGen;
 
 	@Override
-	public void behave(EventDescription event) {
+	public void behave(EventContext event) {
 		if (treeGen == null) {
 			treeGen = new MarbleWorldGenTrees(true, minHeight, maxHeight, logs, leaves, false);
 		}

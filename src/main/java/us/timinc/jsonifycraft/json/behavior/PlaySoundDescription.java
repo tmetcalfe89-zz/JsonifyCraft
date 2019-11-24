@@ -6,13 +6,18 @@ import us.timinc.jsonifycraft.*;
 import us.timinc.jsonifycraft.event.*;
 
 public class PlaySoundDescription extends WorldBehaviorDescription {
-	public String sound = "entity_ghast_warn";
+	public String sound;
+	public String soundCategory;
+	public float volume = 1.0F;
+	public float pitch = 1.0F;
+	public boolean distanceDelay = false;
 
 	@Override
-	public void behave(EventDescription event) {
+	public void behave(EventContext event) {
 		log("Playing sound %s.", sound);
-		event.world.playSound(PlaintextCalculator.solve(event.variables, pos_x),
-				PlaintextCalculator.solve(event.variables, pos_y), PlaintextCalculator.solve(event.variables, pos_z),
-				JsonifyCraft.REGISTRIES.getSound(sound), SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+		event.world.playSound(PlaintextCalculator.solve(event.getVariables(), pos_x),
+				PlaintextCalculator.solve(event.getVariables(), pos_y),
+				PlaintextCalculator.solve(event.getVariables(), pos_z), JsonifyCraft.REGISTRIES.getSound(sound),
+				JsonifyCraft.REGISTRIES.getSoundCategory(soundCategory), volume, pitch, distanceDelay);
 	}
 }

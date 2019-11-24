@@ -10,7 +10,7 @@ public class RepairHeldItemDescription extends BehaviorDescription {
 	public int amount = 1;
 
 	@Override
-	public void behave(EventDescription event) {
+	public void behave(EventContext event) {
 		ItemStack heldItem = PlaintextHelp.getHeldItem(event.player, hand);
 		log("Repairing item in %s hand by %s.", hand, amount);
 		heldItem.setItemDamage(heldItem.getItemDamage() - amount);

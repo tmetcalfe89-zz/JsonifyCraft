@@ -11,8 +11,8 @@ public class DropItemDescription extends WorldBehaviorDescription {
 	public int count = 1;
 
 	@Override
-	public void behave(EventDescription event) {
-		if (event.world.isRemote)
+	public void behave(EventContext event) {
+		if (event.isRemote())
 			return;
 
 		ItemStack drop = PlaintextId.createItemStackFrom(item, count);

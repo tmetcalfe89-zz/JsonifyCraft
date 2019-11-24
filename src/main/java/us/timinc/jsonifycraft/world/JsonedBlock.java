@@ -16,6 +16,7 @@ import net.minecraft.world.*;
 import net.minecraftforge.fml.relauncher.*;
 import us.timinc.jsonifycraft.*;
 import us.timinc.jsonifycraft.event.*;
+import us.timinc.jsonifycraft.json.*;
 import us.timinc.jsonifycraft.json.world.*;
 import us.timinc.mcutil.*;
 
@@ -24,7 +25,7 @@ public class JsonedBlock extends Block {
 	private AxisAlignedBB boundingBox = null;
 
 	public JsonedBlock(BlockDescription blockJson) {
-		super(JsonifyCraft.REGISTRIES.getMaterial(blockJson.material));
+		super(JsonifyCraft.REGISTRIES.getBlockMaterial(blockJson.material));
 
 		this.blockJson = blockJson;
 
@@ -33,19 +34,19 @@ public class JsonedBlock extends Block {
 
 	private void setup() {
 		setCreativeTab(JsonifyCraft.REGISTRIES.getCreativeTab(blockJson.creativeTab));
-		setDefaultSlipperiness(slipperiness);
+		setDefaultSlipperiness(blockJson.slipperiness);
 		if ((blockJson.hardness < 0) || blockJson.hasFlag("unbreakable")) {
 			setBlockUnbreakable();
 		} else {
+			setResistance(blockJson.resistance / 3.0F);
 			setHardness(blockJson.hardness);
 		}
 		if (!blockJson.harvester.isEmpty()) {
 			String[] splitHarvester = blockJson.harvester.split(",");
 			setHarvestLevel(splitHarvester[0], Integer.parseInt(splitHarvester[1]));
 		}
-		setLightLevel(blockJson.lightLevel);
+		setLightLevel(blockJson.lightLevel / 15);
 		setLightOpacity(blockJson.lightOpacity);
-		setResistance(blockJson.resistance);
 		setSoundType(JsonifyCraft.REGISTRIES.getSoundType(blockJson.soundType));
 		translucent = blockJson.hasFlag("transparent");
 		setTickRandomly(blockJson.hasEvent("randomtick"));
@@ -96,7 +97,7 @@ public class JsonedBlock extends Block {
 		if (blockJson == null)
 			return super.isBeaconBase(worldObj, pos, beacon);
 
-		return blockJson.hasFlag("beacon");
+		return blockJson.hasFlag("beaconbase");
 	}
 
 	@Override
@@ -104,7 +105,7 @@ public class JsonedBlock extends Block {
 		if (blockJson == null)
 			return super.isFullCube(state);
 
-		return !blockJson.hasFlag("partial", "ghost");
+		return !blockJson.hasFlag("ghost") && blockJson.boundingBox.isEmpty();
 	}
 
 	@Override
@@ -127,28 +128,35 @@ public class JsonedBlock extends Block {
 	/* Events */
 
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		if (blockJson == null) {
-			super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
+			super.neighborChanged(state, world, pos, blockIn, fromPos);
 			return;
 		}
 
-		checkForFall(worldIn, pos);
-		checkForUproot(worldIn, pos, state);
+		checkForFall(world, pos);
+		checkForUproot(world, pos, state);
 
-		processEvent(worldIn, null, pos, "neighborchanged");
+		EventContext eventContext = new EventContext(world);
+		eventContext.addPosition("block", pos);
+		eventContext.addPosition("neighbor", fromPos);
+
+		EventProcessor.process(eventContext, DescriptionLoader.getReactors(), "neighborchanged");
 	}
 
 	@Override
-	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
 		if (blockJson == null) {
-			super.onBlockAdded(worldIn, pos, state);
+			super.onBlockAdded(world, pos, state);
 			return;
 		}
 
-		checkForFall(worldIn, pos);
+		checkForFall(world, pos);
 
-		processEvent(worldIn, null, pos, "blockadded");
+		EventContext eventContext = new EventContext(world);
+		eventContext.addPosition("block", pos);
+
+		EventProcessor.process(eventContext, DescriptionLoader.getReactors(), "blockadded");
 	}
 
 	@Override
@@ -157,21 +165,28 @@ public class JsonedBlock extends Block {
 		if ((blockJson == null) || (hand == EnumHand.OFF_HAND))
 			return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
 
-		processEvent(worldIn, playerIn, pos, "blockclicked");
+		EventContext eventContext = new EventContext(worldIn, playerIn);
+		eventContext.addPosition("block", pos);
+		eventContext.addPosition("player", playerIn.getPosition());
+
+		EventProcessor.process(eventContext, DescriptionLoader.getReactors(), "playerinteractblock");
 
 		return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
 	}
 
 	@Override
-	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random) {
+	public void randomTick(World world, BlockPos blockPosition, IBlockState state, Random random) {
 		if (blockJson == null) {
-			super.randomTick(worldIn, pos, state, random);
+			super.randomTick(world, blockPosition, state, random);
 			return;
 		}
 
-		processEvent(worldIn, null, pos, "randomtick");
+		EventContext eventContext = new EventContext(world);
+		eventContext.addPosition("block", blockPosition);
 
-		super.randomTick(worldIn, pos, state, random);
+		EventProcessor.process(eventContext, DescriptionLoader.getReactors(), "randomtick");
+
+		super.randomTick(world, blockPosition, state, random);
 	}
 
 	@Override
@@ -186,11 +201,6 @@ public class JsonedBlock extends Block {
 				makeBlockFall(worldIn, pos);
 			}
 		}
-	}
-
-	private void processEvent(World world, EntityPlayer player, BlockPos pos, String eventName) {
-		EventDescription eventDescription = new EventDescription(world, player, pos);
-		EventProcessor.process(eventDescription, blockJson.events, eventName);
 	}
 
 	/* Processors */

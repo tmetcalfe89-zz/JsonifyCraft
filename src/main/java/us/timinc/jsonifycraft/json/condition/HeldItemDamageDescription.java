@@ -12,7 +12,7 @@ public class HeldItemDamageDescription extends ConditionDescription {
 	public int max = -1;
 
 	@Override
-	public boolean evaluate(EventDescription event) {
+	public boolean evaluate(EventContext event) {
 		ItemStack heldItem = PlaintextHelp.getHeldItem(event.player, hand);
 		int currentDamage = heldItem.getItemDamage();
 

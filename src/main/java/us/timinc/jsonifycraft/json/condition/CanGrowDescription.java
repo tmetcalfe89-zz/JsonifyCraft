@@ -7,12 +7,12 @@ import us.timinc.mcutil.*;
 
 public class CanGrowDescription extends WorldConditionDescription {
 	@Override
-	public boolean evaluate(EventDescription event) {
-		IBlockState targetBlockState = event.world.getBlockState(getPos(event.variables));
+	public boolean evaluate(EventContext eventContext) {
+		IBlockState targetBlockState = eventContext.world.getBlockState(getPos(eventContext.getVariables()));
 
 		if (targetBlockState.getBlock() instanceof IGrowable) {
-			boolean retval = ((IGrowable) targetBlockState.getBlock()).canGrow(event.world, event.pos, targetBlockState,
-					event.world.isRemote);
+			boolean retval = ((IGrowable) targetBlockState.getBlock()).canGrow(eventContext.world,
+					getPos(eventContext.getVariables()), targetBlockState, eventContext.isRemote());
 			log("%s can %sgrow.", PlaintextId.getBlockId(targetBlockState), retval ? "" : "not ");
 			return retval;
 		} else {

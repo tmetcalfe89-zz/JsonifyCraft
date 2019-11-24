@@ -6,14 +6,15 @@ import us.timinc.jsonifycraft.event.*;
 import us.timinc.jsonifycraft.json.*;
 
 public abstract class WorldBehaviorDescription extends BehaviorDescription {
-	public String pos_x = "event_x";
-	public String pos_y = "event_y";
-	public String pos_z = "event_z";
+	public String pos_x = "block_x";
+	public String pos_y = "block_y";
+	public String pos_z = "block_z";
 
 	private transient BlockPos pos = null;
 
-	protected BlockPos getPos(EventDescription event) {
-		return new BlockPos(PlaintextCalculator.solve(event.variables, pos_x),
-				PlaintextCalculator.solve(event.variables, pos_y), PlaintextCalculator.solve(event.variables, pos_z));
+	protected BlockPos getPos(EventContext event) {
+		return new BlockPos(PlaintextCalculator.solve(event.getVariables(), pos_x),
+				PlaintextCalculator.solve(event.getVariables(), pos_y),
+				PlaintextCalculator.solve(event.getVariables(), pos_z));
 	}
 }

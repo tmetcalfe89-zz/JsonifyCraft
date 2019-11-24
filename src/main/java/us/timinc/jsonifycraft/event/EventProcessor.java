@@ -6,7 +6,7 @@ import us.timinc.jsonifycraft.*;
 import us.timinc.jsonifycraft.json.*;
 
 public class EventProcessor {
-	public static boolean process(EventDescription eventDescription, ReactorDescription[] events, String eventName) {
+	public static boolean process(EventContext eventContext, ReactorDescription[] events, String eventName) {
 		if (events == null)
 			return false;
 
@@ -14,14 +14,13 @@ public class EventProcessor {
 
 		for (ReactorDescription event : events) {
 			ReactorDescription reactor = event;
-			JsonifyCraft.LOGGER.info(
-					"Evaluating " + eventName + " on " + (eventDescription.world.isRemote ? "client" : "server") + ".");
+			JsonifyCraft.log("Evaluating %s on %s side.", eventName, eventContext.getSide());
 			if (!reactor.event.equals(eventName)) {
 				continue;
 			}
 			for (ReactionDescription reaction : reactor.reactions) {
-				if (Arrays.stream(reaction.conditions).allMatch(e -> e.evaluate(eventDescription))) {
-					Arrays.stream(reaction.behaviors).forEach(e -> e.behave(eventDescription));
+				if (Arrays.stream(reaction.conditions).allMatch(e -> e.evaluate(eventContext))) {
+					Arrays.stream(reaction.behaviors).forEach(e -> e.behave(eventContext));
 					didSomething = true;
 				}
 			}
