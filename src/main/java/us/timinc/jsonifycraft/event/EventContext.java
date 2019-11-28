@@ -28,6 +28,13 @@ public class EventContext {
 		variables.put(String.format("%s_z", prefix), pos.getZ());
 	}
 
+	public void addTempPosition(String prefix, BlockPos pos) {
+		temps.add(String.format("%s_x", pos.getX()));
+		temps.add(String.format("%s_y", pos.getY()));
+		temps.add(String.format("%s_z", pos.getZ()));
+		addPosition(prefix, pos);
+	}
+
 	public String getSide() {
 		return world.isRemote ? "client" : "server";
 	}
@@ -38,6 +45,10 @@ public class EventContext {
 
 	public int addVariable(String key, int value) {
 		return variables.put(key, value);
+	}
+
+	public int getVariable(String key) {
+		return variables.get(key);
 	}
 
 	public HashMap<String, Integer> getVariables() {

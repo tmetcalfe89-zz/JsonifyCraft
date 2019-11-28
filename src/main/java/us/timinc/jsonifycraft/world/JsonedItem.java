@@ -39,8 +39,8 @@ public class JsonedItem extends Item {
 		EventContext eventContext = new EventContext(world);
 		eventContext.addPosition("block", blockPos);
 		eventContext.addPosition("rt", raytracePos);
-		
-		EventProcessor.process(eventContext, DescriptionLoader.getReactors(), "iteminteractblock");
+
+		EventProcessor.process(eventContext, itemJson.events, "iteminteractblock");
 
 		return super.onItemUse(player, world, blockPos, hand, facing, hitX, hitY, hitZ);
 	}

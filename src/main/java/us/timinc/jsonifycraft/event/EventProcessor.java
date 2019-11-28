@@ -11,9 +11,8 @@ public class EventProcessor {
 			return false;
 
 		boolean didSomething = false;
-
-		for (ReactorDescription event : events) {
-			ReactorDescription reactor = event;
+		
+		for (ReactorDescription reactor : events) {
 			JsonifyCraft.log("Evaluating %s on %s side.", eventName, eventContext.getSide());
 			if (!reactor.event.equals(eventName)) {
 				continue;

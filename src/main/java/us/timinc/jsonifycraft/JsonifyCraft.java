@@ -30,6 +30,7 @@ public class JsonifyCraft {
 
 		BehaviorDeserializer.registerBehavior("debug", DebugDescription.class);
 		BehaviorDeserializer.registerBehavior("changeblock", ChangeBlockDescription.class);
+		BehaviorDeserializer.registerBehavior("changerandomblock", ChangeRandomBlockDescription.class);
 		BehaviorDeserializer.registerBehavior("consumehelditem", ConsumeHeldItemDescription.class);
 		BehaviorDeserializer.registerBehavior("growblock", GrowBlockDescription.class);
 		BehaviorDeserializer.registerBehavior("emitparticles", EmitParticlesDescription.class);

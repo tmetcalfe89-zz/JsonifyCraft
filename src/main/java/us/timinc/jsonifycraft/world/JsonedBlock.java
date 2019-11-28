@@ -141,7 +141,7 @@ public class JsonedBlock extends Block {
 		eventContext.addPosition("block", pos);
 		eventContext.addPosition("neighbor", fromPos);
 
-		EventProcessor.process(eventContext, DescriptionLoader.getReactors(), "neighborchanged");
+		EventProcessor.process(eventContext, blockJson.events, "neighborchanged");
 	}
 
 	@Override
@@ -156,7 +156,7 @@ public class JsonedBlock extends Block {
 		EventContext eventContext = new EventContext(world);
 		eventContext.addPosition("block", pos);
 
-		EventProcessor.process(eventContext, DescriptionLoader.getReactors(), "blockadded");
+		EventProcessor.process(eventContext, blockJson.events, "blockadded");
 	}
 
 	@Override
@@ -169,7 +169,7 @@ public class JsonedBlock extends Block {
 		eventContext.addPosition("block", pos);
 		eventContext.addPosition("player", playerIn.getPosition());
 
-		EventProcessor.process(eventContext, DescriptionLoader.getReactors(), "playerinteractblock");
+		EventProcessor.process(eventContext, blockJson.events, "playerinteractblock");
 
 		return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
 	}
@@ -184,7 +184,7 @@ public class JsonedBlock extends Block {
 		EventContext eventContext = new EventContext(world);
 		eventContext.addPosition("block", blockPosition);
 
-		EventProcessor.process(eventContext, DescriptionLoader.getReactors(), "randomtick");
+		EventProcessor.process(eventContext, blockJson.events, "randomtick");
 
 		super.randomTick(world, blockPosition, state, random);
 	}
