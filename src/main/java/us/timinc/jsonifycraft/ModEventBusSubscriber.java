@@ -34,11 +34,18 @@ public class ModEventBusSubscriber {
 			return;
 
 		RayTraceResult raytraceresult = MinecraftUtil.rayTrace(event.getWorld(), event.getEntityPlayer(), true);
-		BlockPos rtPos = raytraceresult.getBlockPos();
+		BlockPos rtPos = null;
+		if (raytraceresult.typeOfHit == RayTraceResult.Type.BLOCK) {
+			rtPos = raytraceresult.getBlockPos();
+		}
 
 		EventContext eventContext = new EventContext(event.getWorld(), event.getEntityPlayer());
 		eventContext.addPosition("block", event.getPos());
-		eventContext.addPosition("rt", rtPos);
+		if (rtPos != null) {
+			eventContext.addPosition("rt", rtPos);
+		} else {
+			eventContext.addPosition("rt", event.getPos());
+		}
 
 		EventProcessor.process(eventContext, DescriptionLoader.getReactors(), "playerinteractblock");
 	}

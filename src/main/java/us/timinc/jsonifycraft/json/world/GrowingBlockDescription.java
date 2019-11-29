@@ -8,6 +8,6 @@ public class GrowingBlockDescription extends BlockDescription {
 
 	@Override
 	public Block createNewBlock() {
-		return new GrowingBlock(this);
+		return new JsonedGrowingBlock(this);
 	}
 }

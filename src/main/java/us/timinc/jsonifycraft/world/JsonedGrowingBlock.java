@@ -10,10 +10,10 @@ import net.minecraft.world.*;
 import us.timinc.jsonifycraft.*;
 import us.timinc.jsonifycraft.json.world.*;
 
-public class GrowingBlock extends JsonedBlock implements IGrowable {
+public class JsonedGrowingBlock extends JsonedBlock implements IGrowable {
 	public static final PropertyInteger AGE = PropertyInteger.create("age", 0, 15);
 
-	public GrowingBlock(BlockDescription blockJson) {
+	public JsonedGrowingBlock(BlockDescription blockJson) {
 		super(blockJson);
 		setDefaultState(blockState.getBaseState().withProperty(AGE, Integer.valueOf(0)));
 	}
@@ -61,7 +61,7 @@ public class GrowingBlock extends JsonedBlock implements IGrowable {
 
 	@Override
 	public boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient) {
-		int currentAge = state.getValue(GrowingBlock.AGE).intValue();
+		int currentAge = state.getValue(JsonedGrowingBlock.AGE).intValue();
 		return currentAge < (getMaxAge() - 1);
 	}
 
@@ -72,8 +72,8 @@ public class GrowingBlock extends JsonedBlock implements IGrowable {
 
 	@Override
 	public void grow(World worldIn, Random rand, BlockPos pos, IBlockState state) {
-		int currentAge = state.getValue(GrowingBlock.AGE).intValue();
+		int currentAge = state.getValue(JsonedGrowingBlock.AGE).intValue();
 		JsonifyCraft.LOGGER.info("Aging from " + currentAge + " to " + (currentAge + 1) + ".");
-		worldIn.setBlockState(pos, state.withProperty(GrowingBlock.AGE, Integer.valueOf(currentAge + 1)), 2);
+		worldIn.setBlockState(pos, state.withProperty(JsonedGrowingBlock.AGE, Integer.valueOf(currentAge + 1)), 2);
 	}
 }
