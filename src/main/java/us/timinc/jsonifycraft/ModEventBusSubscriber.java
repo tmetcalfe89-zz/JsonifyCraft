@@ -35,7 +35,7 @@ public class ModEventBusSubscriber {
 
 		RayTraceResult raytraceresult = MinecraftUtil.rayTrace(event.getWorld(), event.getEntityPlayer(), true);
 		BlockPos rtPos = null;
-		if (raytraceresult.typeOfHit == RayTraceResult.Type.BLOCK) {
+		if (raytraceresult != null && raytraceresult.typeOfHit == RayTraceResult.Type.BLOCK) {
 			rtPos = raytraceresult.getBlockPos();
 		}
 
