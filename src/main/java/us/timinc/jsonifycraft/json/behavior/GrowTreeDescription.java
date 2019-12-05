@@ -8,12 +8,12 @@ import us.timinc.jsonifycraft.event.*;
 import us.timinc.jsonifycraft.world.feature.*;
 
 public class GrowTreeDescription extends WorldBehaviorDescription {
-	public String leaf = "minecraft:leaves:0";
-	public String log = "minecraft:log:0";
+	public String leaf;
+	public String log;
 	public int minHeight = 5;
 	public int maxHeight = 8;
 	public boolean vines = false;
-	public String treeType = "oak";
+	public String treeType;
 	public boolean growFromSapling = true;
 
 	@Override
