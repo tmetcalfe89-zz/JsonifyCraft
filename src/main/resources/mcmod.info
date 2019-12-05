@@ -1,16 +1,14 @@
-[
-{
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+[{
+  "modid": "jsonifycraft",
+  "name": "JsonifyCraft",
+  "description": "Add content to Minecraft with JSON files.",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://www.curseforge.com/minecraft/mc-mods/jsonifycraft",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authorList": ["Timothy Metcalfe (TimInc)"],
+  "credits": "Various people on the Modded Minecraft Discord server.",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
-}
-]
+}]

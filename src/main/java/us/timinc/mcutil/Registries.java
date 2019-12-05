@@ -8,6 +8,7 @@ import net.minecraft.creativetab.*;
 import net.minecraft.init.*;
 import net.minecraft.potion.*;
 import net.minecraft.util.*;
+import net.minecraftforge.fml.relauncher.*;
 
 public class Registries {
 	private HashMap<String, CreativeTabs> creativeTabs = new HashMap<>();
@@ -19,7 +20,14 @@ public class Registries {
 	private HashMap<String, SoundCategory> soundCategories = new HashMap<>();
 
 	public Registries() {
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void loadClientRegistries() {
 		registerVanillaCreativeTabs();
+	}
+
+	public void loadCommonRegistries() {
 		registerVanillaBlockMaterials();
 		registerVanillaSoundTypes();
 		registerVanillaSounds();

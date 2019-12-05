@@ -22,7 +22,7 @@ public class ChangeRandomBlockDescription extends ChangeBlockDescription {
 		// Since we regenerate immediately if we pick the center position, we
 		// must fail before trying if all ranges are 0. We would always pick the
 		// center, and the randomPosition would never be picked.
-		if (range_x == 0 && range_y == 0 && range_z == 0 && !allowCenter) {
+		if ((range_x == 0) && (range_y == 0) && (range_z == 0) && !allowCenter) {
 			log("At least one range must not be 0.");
 			return;
 		}
@@ -41,7 +41,7 @@ public class ChangeRandomBlockDescription extends ChangeBlockDescription {
 			eventContext.addTempPosition("rand", randomPosition);
 			currentAttempts++;
 			passed = Arrays.stream(conditions).allMatch(e -> e.evaluate(eventContext));
-		} while (currentAttempts < attempts && !passed);
+		} while ((currentAttempts < attempts) && !passed);
 
 		// Change the block.
 		if (passed) {

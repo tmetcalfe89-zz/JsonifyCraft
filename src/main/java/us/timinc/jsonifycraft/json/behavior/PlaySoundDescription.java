@@ -1,6 +1,5 @@
 package us.timinc.jsonifycraft.json.behavior;
 
-import net.minecraft.util.*;
 import us.timinc.calc.*;
 import us.timinc.jsonifycraft.*;
 import us.timinc.jsonifycraft.event.*;

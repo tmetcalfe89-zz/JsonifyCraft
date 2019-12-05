@@ -7,7 +7,6 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.*;
 import us.timinc.jsonifycraft.*;
 import us.timinc.jsonifycraft.event.*;
-import us.timinc.jsonifycraft.json.*;
 import us.timinc.jsonifycraft.json.world.*;
 
 public class JsonedItem extends Item {
@@ -43,5 +42,9 @@ public class JsonedItem extends Item {
 		EventProcessor.process(eventContext, itemJson.events, "iteminteractblock");
 
 		return super.onItemUse(player, world, blockPos, hand, facing, hitX, hitY, hitZ);
+	}
+
+	public String[] getColorizers() {
+		return itemJson.colorizers;
 	}
 }

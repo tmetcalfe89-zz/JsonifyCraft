@@ -16,7 +16,6 @@ import net.minecraft.world.*;
 import net.minecraftforge.fml.relauncher.*;
 import us.timinc.jsonifycraft.*;
 import us.timinc.jsonifycraft.event.*;
-import us.timinc.jsonifycraft.json.*;
 import us.timinc.jsonifycraft.json.world.*;
 import us.timinc.mcutil.*;
 
@@ -30,6 +29,24 @@ public class JsonedBlock extends Block {
 		this.blockJson = blockJson;
 
 		setup();
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+		if (blockJson.hasFlag("leaves")) {
+			doLeafParticles(worldIn, pos, rand);
+		}
+	}
+
+	private void doLeafParticles(World worldIn, BlockPos pos, Random rand) {
+		if (worldIn.isRainingAt(pos.up()) && !worldIn.getBlockState(pos.down()).isTopSolid()
+				&& (rand.nextInt(15) == 1)) {
+			double d0 = pos.getX() + rand.nextFloat();
+			double d1 = pos.getY() - 0.05D;
+			double d2 = pos.getZ() + rand.nextFloat();
+			worldIn.spawnParticle(EnumParticleTypes.DRIP_WATER, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+		}
 	}
 
 	private void setup() {
@@ -72,6 +89,11 @@ public class JsonedBlock extends Block {
 			boundingBox = blockJson.createBoundingBox();
 		}
 		return boundingBox;
+	}
+
+	@Override
+	public int tickRate(World world) {
+		return (blockJson.hasFlag("leaves", "falls") ? 2 : super.tickRate(world));
 	}
 
 	@Override
@@ -134,6 +156,8 @@ public class JsonedBlock extends Block {
 			return;
 		}
 
+		world.scheduleUpdate(pos, this, tickRate(world));
+
 		checkForFall(world, pos);
 		checkForUproot(world, pos, state);
 
@@ -151,6 +175,8 @@ public class JsonedBlock extends Block {
 			return;
 		}
 
+		world.scheduleUpdate(pos, this, tickRate(world));
+
 		checkForFall(world, pos);
 
 		EventContext eventContext = new EventContext(world);
@@ -160,18 +186,20 @@ public class JsonedBlock extends Block {
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand,
+			EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if ((blockJson == null) || (hand == EnumHand.OFF_HAND))
-			return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
+			return super.onBlockActivated(world, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
 
-		EventContext eventContext = new EventContext(worldIn, playerIn);
+		world.scheduleUpdate(pos, this, tickRate(world));
+
+		EventContext eventContext = new EventContext(world, playerIn);
 		eventContext.addPosition("block", pos);
 		eventContext.addPosition("player", playerIn.getPosition());
 
 		EventProcessor.process(eventContext, blockJson.events, "playerinteractblock");
 
-		return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
+		return super.onBlockActivated(world, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
 	}
 
 	@Override
@@ -180,6 +208,8 @@ public class JsonedBlock extends Block {
 			super.randomTick(world, blockPosition, state, random);
 			return;
 		}
+
+		world.scheduleUpdate(blockPosition, this, tickRate(world));
 
 		EventContext eventContext = new EventContext(world);
 		eventContext.addPosition("block", blockPosition);
@@ -190,17 +220,122 @@ public class JsonedBlock extends Block {
 	}
 
 	@Override
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
 		if (blockJson == null) {
-			super.updateTick(worldIn, pos, state, rand);
+			super.updateTick(world, pos, state, rand);
 			return;
 		}
 
+		if (blockJson.hasFlag("leaves")) {
+			checkLeaves(world, pos);
+		}
+
 		if (blockJson.hasFlag("falls")) {
-			if (!worldIn.isRemote) {
-				makeBlockFall(worldIn, pos);
+			if (!world.isRemote) {
+				makeBlockFall(world, pos);
 			}
 		}
+	}
+
+	private void checkLeaves(World worldIn, BlockPos pos) {
+		int i = 4;
+		int j = 5;
+		int k = pos.getX();
+		int l = pos.getY();
+		int i1 = pos.getZ();
+		int j1 = 32;
+		int k1 = 1024;
+		int l1 = 16;
+
+		int[] surroundings = new int[32768];
+
+		if (!worldIn.isAreaLoaded(pos, 1))
+			return; // Forge: prevent decaying leaves from updating neighbors
+					// and loading unloaded chunks
+		if (worldIn.isAreaLoaded(pos, 6)) // Forge: extend range from 5 to 6 to
+											// account for neighbor checks in
+											// world.markAndNotifyBlock ->
+											// world.updateObservingBlocksAt
+		{
+			BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+
+			for (int i2 = -4; i2 <= 4; ++i2) {
+				for (int j2 = -4; j2 <= 4; ++j2) {
+					for (int k2 = -4; k2 <= 4; ++k2) {
+						IBlockState iblockstate = worldIn
+								.getBlockState(blockpos$mutableblockpos.setPos(k + i2, l + j2, i1 + k2));
+						Block block = iblockstate.getBlock();
+
+						if (!block.canSustainLeaves(iblockstate, worldIn,
+								blockpos$mutableblockpos.setPos(k + i2, l + j2, i1 + k2))) {
+							if (block.isLeaves(iblockstate, worldIn,
+									blockpos$mutableblockpos.setPos(k + i2, l + j2, i1 + k2))) {
+								surroundings[((i2 + 16) * 1024) + ((j2 + 16) * 32) + k2 + 16] = -2;
+							} else {
+								surroundings[((i2 + 16) * 1024) + ((j2 + 16) * 32) + k2 + 16] = -1;
+							}
+						} else {
+							surroundings[((i2 + 16) * 1024) + ((j2 + 16) * 32) + k2 + 16] = 0;
+						}
+					}
+				}
+			}
+
+			for (int i3 = 1; i3 <= 4; ++i3) {
+				for (int j3 = -4; j3 <= 4; ++j3) {
+					for (int k3 = -4; k3 <= 4; ++k3) {
+						for (int l3 = -4; l3 <= 4; ++l3) {
+							if (surroundings[((j3 + 16) * 1024) + ((k3 + 16) * 32) + l3 + 16] == (i3 - 1)) {
+								if (surroundings[(((j3 + 16) - 1) * 1024) + ((k3 + 16) * 32) + l3 + 16] == -2) {
+									surroundings[(((j3 + 16) - 1) * 1024) + ((k3 + 16) * 32) + l3 + 16] = i3;
+								}
+
+								if (surroundings[((j3 + 16 + 1) * 1024) + ((k3 + 16) * 32) + l3 + 16] == -2) {
+									surroundings[((j3 + 16 + 1) * 1024) + ((k3 + 16) * 32) + l3 + 16] = i3;
+								}
+
+								if (surroundings[((j3 + 16) * 1024) + (((k3 + 16) - 1) * 32) + l3 + 16] == -2) {
+									surroundings[((j3 + 16) * 1024) + (((k3 + 16) - 1) * 32) + l3 + 16] = i3;
+								}
+
+								if (surroundings[((j3 + 16) * 1024) + ((k3 + 16 + 1) * 32) + l3 + 16] == -2) {
+									surroundings[((j3 + 16) * 1024) + ((k3 + 16 + 1) * 32) + l3 + 16] = i3;
+								}
+
+								if (surroundings[((j3 + 16) * 1024) + ((k3 + 16) * 32) + ((l3 + 16) - 1)] == -2) {
+									surroundings[((j3 + 16) * 1024) + ((k3 + 16) * 32) + ((l3 + 16) - 1)] = i3;
+								}
+
+								if (surroundings[((j3 + 16) * 1024) + ((k3 + 16) * 32) + l3 + 16 + 1] == -2) {
+									surroundings[((j3 + 16) * 1024) + ((k3 + 16) * 32) + l3 + 16 + 1] = i3;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		int l2 = surroundings[16912];
+
+		if (l2 < 0) {
+			destroy(worldIn, pos);
+		}
+	}
+
+	@Override
+	public boolean canSustainLeaves(IBlockState state, IBlockAccess world, BlockPos pos) {
+		return blockJson.hasFlag("sustainleaves");
+	}
+
+	@Override
+	public boolean isLeaves(IBlockState state, IBlockAccess world, BlockPos pos) {
+		return blockJson.hasFlag("leaves");
+	}
+
+	private void destroy(World worldIn, BlockPos pos) {
+		dropBlockAsItem(worldIn, pos, worldIn.getBlockState(pos), 0);
+		worldIn.setBlockToAir(pos);
 	}
 
 	/* Processors */
@@ -241,5 +376,13 @@ public class JsonedBlock extends Block {
 				worldIn.spawnEntity(entityfallingblock);
 			}
 		}
+	}
+
+	public boolean hasFlag(String... searchFlags) {
+		return blockJson.hasFlag(searchFlags);
+	}
+
+	public String[] getColorizers() {
+		return blockJson.colorizers;
 	}
 }

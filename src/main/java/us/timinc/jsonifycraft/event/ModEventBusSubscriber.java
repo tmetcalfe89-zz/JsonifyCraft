@@ -1,15 +1,20 @@
-package us.timinc.jsonifycraft;
+package us.timinc.jsonifycraft.event;
+
+import java.util.*;
 
 import net.minecraft.block.*;
 import net.minecraft.item.*;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.*;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.eventhandler.*;
-import us.timinc.jsonifycraft.event.*;
-import us.timinc.jsonifycraft.json.*;
+import net.minecraftforge.fml.relauncher.*;
+import us.timinc.jsonifycraft.*;
+import us.timinc.jsonifycraft.client.*;
+import us.timinc.jsonifycraft.world.*;
 import us.timinc.mcutil.*;
 
 @Mod.EventBusSubscriber
@@ -33,9 +38,12 @@ public class ModEventBusSubscriber {
 		if (event.getHand() == EnumHand.OFF_HAND)
 			return;
 
+		if (!Arrays.stream(DescriptionLoader.getReactors()).anyMatch(e -> e.event.equals("playerinteractblock")))
+			return;
+
 		RayTraceResult raytraceresult = MinecraftUtil.rayTrace(event.getWorld(), event.getEntityPlayer(), true);
 		BlockPos rtPos = null;
-		if (raytraceresult != null && raytraceresult.typeOfHit == RayTraceResult.Type.BLOCK) {
+		if ((raytraceresult != null) && (raytraceresult.typeOfHit == RayTraceResult.Type.BLOCK)) {
 			rtPos = raytraceresult.getBlockPos();
 		}
 
@@ -48,5 +56,40 @@ public class ModEventBusSubscriber {
 		}
 
 		EventProcessor.process(eventContext, DescriptionLoader.getReactors(), "playerinteractblock");
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public static void onBlockColorsInit(ColorHandlerEvent.Block event) {
+		DescriptionLoader.blocks.forEach(block -> {
+			JsonedBlock jsonedBlock = (JsonedBlock) block;
+
+			String[] colorizers = jsonedBlock.getColorizers();
+
+			if (colorizers.length == 0)
+				return;
+
+			event.getBlockColors().registerBlockColorHandler(new JsonedBlockColor(colorizers), jsonedBlock);
+		});
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public static void onItemColorsInit(ColorHandlerEvent.Item event) {
+		DescriptionLoader.items.forEach(item -> {
+			String[] colorizers;
+
+			if (item instanceof JsonedItem) {
+				colorizers = ((JsonedItem) item).getColorizers();
+			} else if (item instanceof ItemBlock) {
+				colorizers = ((JsonedBlock) ((ItemBlock) item).getBlock()).getColorizers();
+			} else
+				return;
+
+			if (colorizers.length == 0)
+				return;
+
+			event.getItemColors().registerItemColorHandler(new JsonedItemColor(colorizers), item);
+		});
 	}
 }

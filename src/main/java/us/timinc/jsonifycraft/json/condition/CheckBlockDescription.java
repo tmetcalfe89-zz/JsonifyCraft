@@ -1,9 +1,6 @@
 package us.timinc.jsonifycraft.json.condition;
 
-import java.util.*;
-
 import net.minecraft.util.math.*;
-import us.timinc.calc.*;
 import us.timinc.jsonifycraft.event.*;
 import us.timinc.mcutil.*;
 

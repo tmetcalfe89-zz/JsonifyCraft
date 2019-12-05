@@ -1,4 +1,4 @@
-package us.timinc.jsonifycraft.json;
+package us.timinc.jsonifycraft;
 
 import java.io.*;
 import java.util.*;
@@ -8,7 +8,7 @@ import com.google.gson.*;
 import net.minecraft.block.*;
 import net.minecraft.item.*;
 import net.minecraftforge.registries.*;
-import us.timinc.jsonifycraft.*;
+import us.timinc.jsonifycraft.json.*;
 import us.timinc.jsonifycraft.json.deserializers.*;
 import us.timinc.jsonifycraft.json.world.*;
 
