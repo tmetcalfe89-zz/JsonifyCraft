@@ -43,6 +43,7 @@ public class CommonProxy {
 
 		GameDeserializer.registerGameObject("block", BlockDescription.class);
 		GameDeserializer.registerGameObject("growingblock", GrowingBlockDescription.class);
+		GameDeserializer.registerGameObject("rotatingblock", RotatingBlockDescription.class);
 		GameDeserializer.registerGameObject("item", ItemDescription.class);
 		GameDeserializer.registerGameObject("food", FoodDescription.class);
 		GameDeserializer.registerGameObject("reactor", ReactorDescription.class);
