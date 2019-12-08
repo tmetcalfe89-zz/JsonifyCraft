@@ -12,7 +12,7 @@ import us.timinc.mcutil.*;
 public class JsonifyCraft {
 	public static final String MODID = "jsonifycraft";
 	public static final String NAME = "JsonifyCraft";
-	public static final String VERSION = "1.3.0";
+	public static final String VERSION = "1.3.1";
 
 	@SidedProxy(clientSide = "us.timinc.jsonifycraft.proxy.ClientProxy", serverSide = "us.timinc.jsonifycraft.proxy.CommonProxy")
 	public static CommonProxy proxy;
