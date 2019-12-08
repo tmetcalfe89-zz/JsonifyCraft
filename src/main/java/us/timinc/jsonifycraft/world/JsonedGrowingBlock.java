@@ -8,6 +8,7 @@ import net.minecraft.block.state.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.*;
 import us.timinc.jsonifycraft.*;
+import us.timinc.jsonifycraft.event.*;
 import us.timinc.jsonifycraft.json.world.*;
 
 public class JsonedGrowingBlock extends JsonedBlock implements IGrowable {
@@ -71,9 +72,14 @@ public class JsonedGrowingBlock extends JsonedBlock implements IGrowable {
 	}
 
 	@Override
-	public void grow(World worldIn, Random rand, BlockPos pos, IBlockState state) {
+	public void grow(World world, Random rand, BlockPos pos, IBlockState state) {
 		int currentAge = state.getValue(JsonedGrowingBlock.AGE).intValue();
 		JsonifyCraft.LOGGER.info("Aging from " + currentAge + " to " + (currentAge + 1) + ".");
-		worldIn.setBlockState(pos, state.withProperty(JsonedGrowingBlock.AGE, Integer.valueOf(currentAge + 1)), 2);
+		world.setBlockState(pos, state.withProperty(JsonedGrowingBlock.AGE, Integer.valueOf(currentAge + 1)), 2);
+
+		EventContext eventContext = new EventContext(world);
+		eventContext.addPosition("block", pos);
+
+		EventProcessor.process(eventContext, blockJson.events, "growblock");
 	}
 }
