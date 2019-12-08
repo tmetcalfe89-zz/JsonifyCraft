@@ -35,7 +35,7 @@ public class JsonedItem extends Item {
 		RayTraceResult raytraceresult = rayTrace(world, player, true);
 		BlockPos raytracePos = raytraceresult.getBlockPos();
 
-		EventContext eventContext = new EventContext(world);
+		EventContext eventContext = new EventContext(world, player);
 		eventContext.addPosition("block", blockPos);
 		eventContext.addPosition("rt", raytracePos);
 
