@@ -68,7 +68,7 @@ public class JsonedGrowingBlock extends JsonedBlock implements IGrowable {
 
 	@Override
 	public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, IBlockState state) {
-		return blockJson.hasFlag("bonemeal");
+		return blockJson.hasFlag("bonemealable");
 	}
 
 	@Override
