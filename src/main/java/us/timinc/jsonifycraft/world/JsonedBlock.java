@@ -94,7 +94,7 @@ public class JsonedBlock extends Block {
 
 	@Override
 	public int tickRate(World world) {
-		return (blockJson.hasFlag("leaves", "falls") ? 2 : super.tickRate(world));
+		return (blockJson.hasFlag("leaves", "falls") && !blockJson.hasFlag("playerplaced") ? 2 : super.tickRate(world));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -232,7 +232,7 @@ public class JsonedBlock extends Block {
 			return;
 		}
 
-		if (blockJson.hasFlag("leaves")) {
+		if (blockJson.hasFlag("leaves") && !blockJson.hasFlag("playerplaced")) {
 			checkLeaves(world, pos);
 		}
 
@@ -384,5 +384,16 @@ public class JsonedBlock extends Block {
 
 	public String[] getColorizers() {
 		return blockJson.colorizers;
+	}
+
+	@Override
+	protected ItemStack getSilkTouchDrop(IBlockState state) {
+		if (blockJson == null)
+			return super.getSilkTouchDrop(state);
+		
+		if (!blockJson.silkTouch.isEmpty())
+			return PlaintextId.createItemStackFrom(blockJson.silkTouch, 1);
+		
+		return super.getSilkTouchDrop(state);
 	}
 }
