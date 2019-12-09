@@ -22,6 +22,7 @@ public class BlockDescription extends WorldObjectDescription {
 	public String drop = null;
 	public String[] soils = null;
 	public String[] colorizers = {};
+	public String silkTouch;
 
 	protected transient Block block = null;
 	private transient ItemBlock item = null;

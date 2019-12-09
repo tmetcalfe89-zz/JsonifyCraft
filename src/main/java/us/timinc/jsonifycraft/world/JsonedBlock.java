@@ -40,7 +40,7 @@ public class JsonedBlock extends Block {
 	}
 
 	private void doLeafParticles(World worldIn, BlockPos pos, Random rand) {
-		if (worldIn.isRainingAt(pos.up()) && !worldIn.getBlockState(pos.down()).isTopSolid()
+		if (worldIn.isRainingAt(pos.up()) && !worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP)
 				&& (rand.nextInt(15) == 1)) {
 			double d0 = pos.getX() + rand.nextFloat();
 			double d1 = pos.getY() - 0.05D;
@@ -79,6 +79,7 @@ public class JsonedBlock extends Block {
 		return super.canPlaceBlockAt(worldIn, pos) && blockJson.hasSoil(worldIn.getBlockState(pos.down()));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
 		if ((blockJson == null) || blockJson.boundingBox.isEmpty())
@@ -93,9 +94,10 @@ public class JsonedBlock extends Block {
 
 	@Override
 	public int tickRate(World world) {
-		return (blockJson.hasFlag("leaves", "falls") ? 2 : super.tickRate(world));
+		return (blockJson.hasFlag("leaves", "falls") && !blockJson.hasFlag("playerplaced") ? 2 : super.tickRate(world));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	@Nullable
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
@@ -105,6 +107,7 @@ public class JsonedBlock extends Block {
 		return blockJson.hasFlag("ghost") ? NULL_AABB : super.getCollisionBoundingBox(blockState, worldIn, pos);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
 		if (blockJson == null)
@@ -122,6 +125,7 @@ public class JsonedBlock extends Block {
 		return blockJson.hasFlag("beaconbase");
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isFullCube(IBlockState state) {
 		if (blockJson == null)
@@ -130,6 +134,7 @@ public class JsonedBlock extends Block {
 		return !blockJson.hasFlag("ghost") && blockJson.boundingBox.isEmpty();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		if (blockJson == null)
@@ -149,6 +154,7 @@ public class JsonedBlock extends Block {
 
 	/* Events */
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		if (blockJson == null) {
@@ -226,7 +232,7 @@ public class JsonedBlock extends Block {
 			return;
 		}
 
-		if (blockJson.hasFlag("leaves")) {
+		if (blockJson.hasFlag("leaves") && !blockJson.hasFlag("playerplaced")) {
 			checkLeaves(world, pos);
 		}
 
@@ -238,15 +244,9 @@ public class JsonedBlock extends Block {
 	}
 
 	private void checkLeaves(World worldIn, BlockPos pos) {
-		int i = 4;
-		int j = 5;
 		int k = pos.getX();
 		int l = pos.getY();
 		int i1 = pos.getZ();
-		int j1 = 32;
-		int k1 = 1024;
-		int l1 = 16;
-
 		int[] surroundings = new int[32768];
 
 		if (!worldIn.isAreaLoaded(pos, 1))
@@ -384,5 +384,16 @@ public class JsonedBlock extends Block {
 
 	public String[] getColorizers() {
 		return blockJson.colorizers;
+	}
+
+	@Override
+	protected ItemStack getSilkTouchDrop(IBlockState state) {
+		if (blockJson == null)
+			return super.getSilkTouchDrop(state);
+		
+		if (!blockJson.silkTouch.isEmpty())
+			return PlaintextId.createItemStackFrom(blockJson.silkTouch, 1);
+		
+		return super.getSilkTouchDrop(state);
 	}
 }

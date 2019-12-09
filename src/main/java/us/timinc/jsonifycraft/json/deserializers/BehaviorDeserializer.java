@@ -9,11 +9,11 @@ import us.timinc.jsonifycraft.*;
 import us.timinc.jsonifycraft.json.*;
 
 public class BehaviorDeserializer implements JsonDeserializer<BehaviorDescription> {
-	private static HashMap<String, Class> behaviorClasses = new HashMap<>();
+	private static HashMap<String, Type> behaviorClasses = new HashMap<>();
 
-	public static void registerBehavior(String name, Class _class) {
+	public static void registerBehavior(String name, Type type) {
 		JsonifyCraft.LOGGER.info("Registering behavior: " + name);
-		behaviorClasses.put(name, _class);
+		behaviorClasses.put(name, type);
 	}
 
 	@Override

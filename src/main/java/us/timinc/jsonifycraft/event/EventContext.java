@@ -43,8 +43,8 @@ public class EventContext {
 		return world.getBlockState(pos);
 	}
 
-	public int addVariable(String key, int value) {
-		return variables.put(key, value);
+	public void addVariable(String key, int value) {
+		variables.put(key, value);
 	}
 
 	public int getVariable(String key) {
