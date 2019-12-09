@@ -17,8 +17,6 @@ public class TreeGenOak extends TreeGenAbstract {
 	@Override
 	public boolean generate(World world, Random rand, BlockPos pos) {
 		int treeHeight = rand.nextInt(description.maxHeight - description.minHeight) + description.minHeight;
-		boolean flag = true;
-
 		if ((pos.getY() >= 1) && ((pos.getY() + treeHeight + 1) <= world.getHeight())) {
 			if (!isSuitableLocation(world, pos, treeHeight))
 				return false;

@@ -25,6 +25,7 @@ public class Registries {
 	@SideOnly(Side.CLIENT)
 	public void loadClientRegistries() {
 		registerVanillaCreativeTabs();
+		registerVanillaSoundCategories();
 	}
 
 	public void loadCommonRegistries() {
