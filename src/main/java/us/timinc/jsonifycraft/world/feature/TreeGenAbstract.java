@@ -2,13 +2,10 @@ package us.timinc.jsonifycraft.world.feature;
 
 import java.util.*;
 
-import net.minecraft.block.material.*;
-import net.minecraft.block.state.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.*;
 import net.minecraft.world.gen.feature.*;
 import us.timinc.jsonifycraft.json.behavior.*;
-import us.timinc.mcutil.*;
 
 public abstract class TreeGenAbstract extends WorldGenAbstractTree {
 

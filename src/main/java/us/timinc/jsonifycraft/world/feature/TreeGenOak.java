@@ -6,8 +6,6 @@ import net.minecraft.block.material.*;
 import net.minecraft.block.state.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.*;
-import net.minecraft.world.chunk.*;
-import net.minecraft.world.gen.feature.*;
 import us.timinc.jsonifycraft.json.behavior.*;
 import us.timinc.mcutil.*;
 
@@ -43,6 +41,7 @@ public class TreeGenOak extends TreeGenAbstract {
 			return false;
 	}
 
+	@Override
 	public boolean isSuitableLocation(World world, BlockPos pos, int treeHeight) {
 		for (int j = pos.getY(); j <= (pos.getY() + 1 + treeHeight); ++j) {
 			int k = 1;
@@ -70,6 +69,7 @@ public class TreeGenOak extends TreeGenAbstract {
 		return true;
 	}
 
+	@Override
 	public void generateLeaves(World world, BlockPos pos, int treeHeight, Random rand) {
 		for (int i3 = (pos.getY() - 3) + treeHeight; i3 <= (pos.getY() + treeHeight); ++i3) {
 			int i4 = i3 - (pos.getY() + treeHeight);
@@ -97,6 +97,7 @@ public class TreeGenOak extends TreeGenAbstract {
 		}
 	}
 
+	@Override
 	public void generateLogs(World world, BlockPos pos, int treeHeight, Random rand) {
 		for (int j3 = 0; j3 < treeHeight; ++j3) {
 			BlockPos upN = pos.up(j3);
