@@ -12,7 +12,6 @@ import us.timinc.mcutil.*;
 public class CommonProxy {
 
 	public void preInit(FMLPreInitializationEvent evt) {
-		System.out.println("PREINIT SHIT");
 		JsonifyCraft.LOGGER = evt.getModLog();
 		JsonifyCraft.REGISTRIES = new Registries();
 		JsonifyCraft.REGISTRIES.loadCommonRegistries();
