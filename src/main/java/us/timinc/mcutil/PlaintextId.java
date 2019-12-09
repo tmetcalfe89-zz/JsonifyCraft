@@ -64,6 +64,7 @@ public class PlaintextId {
 	 *            The block ID.
 	 * @return The block state.
 	 */
+	@SuppressWarnings("deprecation")
 	public static IBlockState getBlockStateFrom(String blockId) {
 		blockId = fixMetadata(blockId, IdType.OBJ);
 		String[] splitIntoBlockId = blockId.split(":");

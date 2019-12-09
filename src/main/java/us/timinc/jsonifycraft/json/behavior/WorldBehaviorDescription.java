@@ -10,8 +10,6 @@ public abstract class WorldBehaviorDescription extends BehaviorDescription {
 	public String pos_y = "block_y";
 	public String pos_z = "block_z";
 
-	private transient BlockPos pos = null;
-
 	protected BlockPos getPos(EventContext event) {
 		return new BlockPos(PlaintextCalculator.solve(event.getVariables(), pos_x),
 				PlaintextCalculator.solve(event.getVariables(), pos_y),

@@ -13,10 +13,10 @@ public class EventProcessor {
 		boolean didSomething = false;
 
 		for (ReactorDescription reactor : events) {
-			JsonifyCraft.log("Evaluating %s on %s side.", eventName, eventContext.getSide());
 			if (!reactor.event.equals(eventName)) {
 				continue;
 			}
+			JsonifyCraft.log("Evaluating %s on %s side.", eventName, eventContext.getSide());
 			for (ReactionDescription reaction : reactor.reactions) {
 				if (Arrays.stream(reaction.conditions).allMatch(e -> e.evaluate(eventContext))) {
 					Arrays.stream(reaction.behaviors).forEach(e -> e.behave(eventContext));

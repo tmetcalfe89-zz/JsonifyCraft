@@ -87,6 +87,7 @@ public class JsonedRotatingBlock extends JsonedBlock {
 		return new ItemStack(Item.getItemFromBlock(this));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY,
 			float hitZ, int meta, EntityLivingBase placer) {

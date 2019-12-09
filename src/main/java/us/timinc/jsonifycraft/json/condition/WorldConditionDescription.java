@@ -11,8 +11,6 @@ public abstract class WorldConditionDescription extends ConditionDescription {
 	public String pos_y = "block_y";
 	public String pos_z = "block_z";
 
-	private transient BlockPos pos = null;
-
 	protected BlockPos getPos(HashMap<String, Integer> variables) {
 		return new BlockPos(PlaintextCalculator.solve(variables, pos_x), PlaintextCalculator.solve(variables, pos_y),
 				PlaintextCalculator.solve(variables, pos_z));
