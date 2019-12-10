@@ -177,7 +177,7 @@ public class TreeGenOak extends TreeGenAbstract {
 
 	private void addHangingVine(World worldIn, BlockPos pos, PropertyBool prop) {
 		this.addVine(worldIn, pos, prop);
-		int i = 4;
+		int i = description.minHeight - 1;
 
 		for (BlockPos blockpos = pos.down(); worldIn.isAirBlock(blockpos) && i > 0; --i) {
 			this.addVine(worldIn, blockpos, prop);
