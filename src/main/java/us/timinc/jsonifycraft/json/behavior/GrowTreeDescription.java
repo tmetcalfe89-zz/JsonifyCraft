@@ -14,6 +14,7 @@ public class GrowTreeDescription extends WorldBehaviorDescription {
 	public String log;
 	public int minHeight = 5;
 	public int maxHeight = 8;
+	public int bonusHeight = 0;
 	public boolean vines = false;
 	public String treeType;
 	public boolean growFromSapling = true;
@@ -37,7 +38,6 @@ public class GrowTreeDescription extends WorldBehaviorDescription {
 					.getConstructor(Boolean.class, GrowTreeDescription.class).newInstance(true, this);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
