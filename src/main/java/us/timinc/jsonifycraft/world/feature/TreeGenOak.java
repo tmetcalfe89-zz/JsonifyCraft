@@ -4,6 +4,7 @@ import java.util.*;
 
 import net.minecraft.block.*;
 import net.minecraft.block.material.*;
+import net.minecraft.block.properties.*;
 import net.minecraft.block.state.*;
 import net.minecraft.init.*;
 import net.minecraft.util.math.*;
@@ -119,11 +120,68 @@ public class TreeGenOak extends TreeGenAbstract {
 	public void generateVines(World world, BlockPos pos, int treeHeight, Random rand) {
 		for (int hi = 0; hi < treeHeight; ++hi) {
 			if (hi > 0) {
-				if (world.isAirBlock(pos.add(-1, hi, 0))) {
-					setBlockAndNotifyAdequately(world, pos.add(-1, hi, 0),
-							Blocks.VINE.getDefaultState().withProperty(BlockVine.EAST, Boolean.valueOf(true)));
+				if (rand.nextInt(3) > 0 && world.isAirBlock(pos.add(-1, hi, 0))) {
+					addVine(world, pos.add(-1, hi, 0), BlockVine.EAST);
+				}
+
+				if (rand.nextInt(3) > 0 && world.isAirBlock(pos.add(1, hi, 0))) {
+					addVine(world, pos.add(1, hi, 0), BlockVine.WEST);
+				}
+
+				if (rand.nextInt(3) > 0 && world.isAirBlock(pos.add(0, hi, -1))) {
+					addVine(world, pos.add(0, hi, -1), BlockVine.SOUTH);
+				}
+
+				if (rand.nextInt(3) > 0 && world.isAirBlock(pos.add(0, hi, 1))) {
+					addVine(world, pos.add(0, hi, 1), BlockVine.NORTH);
 				}
 			}
+		}
+
+		for (int yi = pos.getY() - (description.maxHeight - description.minHeight) + treeHeight; yi <= pos.getY()
+				+ treeHeight; ++yi) {
+			int distanceFromTop = yi - (pos.getY() + treeHeight);
+			int leafSpread = 2 - distanceFromTop / 2;
+
+			for (int xi = pos.getX() - leafSpread; xi <= pos.getX() + leafSpread; ++xi) {
+				for (int zi = pos.getZ() - leafSpread; zi <= pos.getZ() + leafSpread; ++zi) {
+					BlockPos posI = new BlockPos(xi, yi, zi);
+					IBlockState state = world.getBlockState(posI);
+
+					if (state.getBlock().isLeaves(state, world, posI)) {
+						if (rand.nextInt(4) == 0 && world.isAirBlock(posI.west())) {
+							addHangingVine(world, posI.west(), BlockVine.EAST);
+						}
+
+						if (rand.nextInt(4) == 0 && world.isAirBlock(posI.east())) {
+							addHangingVine(world, posI.east(), BlockVine.WEST);
+						}
+
+						if (rand.nextInt(4) == 0 && world.isAirBlock(posI.north())) {
+							addHangingVine(world, posI.north(), BlockVine.SOUTH);
+						}
+
+						if (rand.nextInt(4) == 0 && world.isAirBlock(posI.south())) {
+							addHangingVine(world, posI.south(), BlockVine.NORTH);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void addVine(World worldIn, BlockPos pos, PropertyBool prop) {
+		this.setBlockAndNotifyAdequately(worldIn, pos,
+				Blocks.VINE.getDefaultState().withProperty(prop, Boolean.valueOf(true)));
+	}
+
+	private void addHangingVine(World worldIn, BlockPos pos, PropertyBool prop) {
+		this.addVine(worldIn, pos, prop);
+		int i = 4;
+
+		for (BlockPos blockpos = pos.down(); worldIn.isAirBlock(blockpos) && i > 0; --i) {
+			this.addVine(worldIn, blockpos, prop);
+			blockpos = blockpos.down();
 		}
 	}
 }
