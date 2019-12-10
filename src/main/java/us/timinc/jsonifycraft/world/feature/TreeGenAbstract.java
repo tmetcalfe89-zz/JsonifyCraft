@@ -11,7 +11,7 @@ public abstract class TreeGenAbstract extends WorldGenAbstractTree {
 
 	protected GrowTreeDescription description;
 
-	public TreeGenAbstract(boolean notify, GrowTreeDescription description) {
+	public TreeGenAbstract(Boolean notify, GrowTreeDescription description) {
 		super(notify);
 		this.description = description;
 	}
