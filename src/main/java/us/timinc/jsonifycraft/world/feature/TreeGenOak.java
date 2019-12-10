@@ -10,7 +10,7 @@ import us.timinc.jsonifycraft.json.behavior.*;
 import us.timinc.mcutil.*;
 
 public class TreeGenOak extends TreeGenAbstract {
-	public TreeGenOak(boolean notify, GrowTreeDescription description) {
+	public TreeGenOak(Boolean notify, GrowTreeDescription description) {
 		super(notify, description);
 	}
 

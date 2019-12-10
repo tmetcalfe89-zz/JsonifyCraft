@@ -9,6 +9,7 @@ import net.minecraft.init.*;
 import net.minecraft.potion.*;
 import net.minecraft.util.*;
 import net.minecraftforge.fml.relauncher.*;
+import us.timinc.jsonifycraft.world.feature.*;
 
 public class Registries {
 	private HashMap<String, CreativeTabs> creativeTabs = new HashMap<>();
@@ -18,6 +19,7 @@ public class Registries {
 	private HashMap<String, Potion> effects = new HashMap<>();
 	private HashMap<String, EnumParticleTypes> particleTypes = new HashMap<>();
 	private HashMap<String, SoundCategory> soundCategories = new HashMap<>();
+	private HashMap<String, Class<? extends TreeGenAbstract>> treeGenerators = new HashMap<>();
 
 	public Registries() {
 	}
@@ -34,6 +36,8 @@ public class Registries {
 		registerVanillaSounds();
 		registerVanillaEffects();
 		registerVanillaParticleTypes();
+
+		registerDefaultTreeGenerators();
 	}
 
 	public void registerCreativeTab(String label, CreativeTabs creativeTab) {
@@ -748,5 +752,18 @@ public class Registries {
 		for (String name : vanillaNames) {
 			registerSoundCategory(name.toUpperCase(), SoundCategory.getByName(name));
 		}
+	}
+
+	public Class<? extends TreeGenAbstract> getTreeGenerator(String name) {
+		return treeGenerators.get(name);
+	}
+
+	public void registerTreeGenerator(String name, Class<? extends TreeGenAbstract> treeGenerator) {
+		treeGenerators.put(name, treeGenerator);
+	}
+
+	private void registerDefaultTreeGenerators() {
+		registerTreeGenerator("oak", TreeGenOak.class);
+		registerTreeGenerator("spruce", TreeGenPine.class);
 	}
 }

@@ -1,9 +1,11 @@
 package us.timinc.jsonifycraft.json.behavior;
 
+import java.lang.reflect.*;
+
 import net.minecraft.block.state.*;
 import net.minecraft.util.math.*;
-import net.minecraft.world.gen.feature.*;
 import net.minecraftforge.event.terraingen.*;
+import us.timinc.jsonifycraft.*;
 import us.timinc.jsonifycraft.event.*;
 import us.timinc.jsonifycraft.world.feature.*;
 
@@ -29,18 +31,18 @@ public class GrowTreeDescription extends WorldBehaviorDescription {
 		if (!TerrainGen.saplingGrowTree(event.world, event.world.rand, pos))
 			return;
 
-		WorldGenerator treeGenerator;
-		switch (treeType) {
-		case "oak":
-			treeGenerator = new TreeGenOak(true, this);
-			break;
-		case "spruce":
-			treeGenerator = new TreeGenPine(true, this);
-			break;
-		default:
-			treeGenerator = new TreeGenOak(true, this);
-			break;
+		TreeGenAbstract treeGenerator = null;
+		try {
+			treeGenerator = JsonifyCraft.REGISTRIES.getTreeGenerator(treeType)
+					.getConstructor(Boolean.class, GrowTreeDescription.class).newInstance(true, this);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
+		if (treeGenerator == null)
+			return;
 
 		log("Growing tree at %s.", pos.toString());
 

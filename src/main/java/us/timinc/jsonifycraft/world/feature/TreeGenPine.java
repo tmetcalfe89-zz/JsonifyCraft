@@ -15,7 +15,7 @@ public class TreeGenPine extends TreeGenAbstract {
 	private int k;
 	private int l;
 
-	public TreeGenPine(boolean notify, GrowTreeDescription description) {
+	public TreeGenPine(Boolean notify, GrowTreeDescription description) {
 		super(notify, description);
 	}
 
