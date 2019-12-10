@@ -21,24 +21,24 @@ public class TreeGenPine extends TreeGenAbstract {
 
 	@Override
 	public boolean isSuitableLocation(World world, BlockPos pos, int treeHeight) {
-		for (int i1 = pos.getY(); i1 <= pos.getY() + 1 + treeHeight; ++i1) {
-			int j1;
+		for (int yi = pos.getY(); yi <= pos.getY() + 1 + treeHeight; ++yi) {
+			int leafSpan;
 
-			if (i1 - pos.getY() < j) {
-				j1 = 0;
+			if (yi - pos.getY() < j) {
+				leafSpan = 0;
 			} else {
-				j1 = l;
+				leafSpan = l;
 			}
 
 			BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
-			for (int k1 = pos.getX() - j1; k1 <= pos.getX() + j1; ++k1) {
-				for (int l1 = pos.getZ() - j1; l1 <= pos.getZ() + j1; ++l1) {
-					if (i1 >= 0 && i1 < world.getHeight()) {
-						IBlockState state = world.getBlockState(blockpos$mutableblockpos.setPos(k1, i1, l1));
+			for (int xi = pos.getX() - leafSpan; xi <= pos.getX() + leafSpan; ++xi) {
+				for (int zi = pos.getZ() - leafSpan; zi <= pos.getZ() + leafSpan; ++zi) {
+					if (yi >= 0 && yi < world.getHeight()) {
+						IBlockState state = world.getBlockState(blockpos$mutableblockpos.setPos(xi, yi, zi));
 
-						if (!state.getBlock().isAir(state, world, blockpos$mutableblockpos.setPos(k1, i1, l1)) && !state
-								.getBlock().isLeaves(state, world, blockpos$mutableblockpos.setPos(k1, i1, l1))) {
+						if (!state.getBlock().isAir(state, world, blockpos$mutableblockpos.setPos(xi, yi, zi)) && !state
+								.getBlock().isLeaves(state, world, blockpos$mutableblockpos.setPos(xi, yi, zi))) {
 							return false;
 						}
 					} else {
@@ -52,21 +52,21 @@ public class TreeGenPine extends TreeGenAbstract {
 
 	@Override
 	public void generateLeaves(World world, BlockPos pos, int treeHeight, Random rand) {
-		int i3 = rand.nextInt(2);
-		int j3 = 1;
-		int k3 = 0;
+		int leafSpan = rand.nextInt(2);
+		int someI = 1;
+		int someII = 0;
 
-		for (int l3 = 0; l3 <= k; ++l3) {
-			int j4 = pos.getY() + treeHeight - l3;
+		for (int hi = 0; hi <= k; ++hi) {
+			int distanceFromTop = pos.getY() + treeHeight - hi;
 
-			for (int i2 = pos.getX() - i3; i2 <= pos.getX() + i3; ++i2) {
-				int j2 = i2 - pos.getX();
+			for (int xi = pos.getX() - leafSpan; xi <= pos.getX() + leafSpan; ++xi) {
+				int distanceFromX = xi - pos.getX();
 
-				for (int k2 = pos.getZ() - i3; k2 <= pos.getZ() + i3; ++k2) {
-					int l2 = k2 - pos.getZ();
+				for (int zi = pos.getZ() - leafSpan; zi <= pos.getZ() + leafSpan; ++zi) {
+					int distanceFromZ = zi - pos.getZ();
 
-					if (Math.abs(j2) != i3 || Math.abs(l2) != i3 || i3 <= 0) {
-						BlockPos blockpos = new BlockPos(i2, j4, k2);
+					if (Math.abs(distanceFromX) != leafSpan || Math.abs(distanceFromZ) != leafSpan || leafSpan <= 0) {
+						BlockPos blockpos = new BlockPos(xi, distanceFromTop, zi);
 						IBlockState state = world.getBlockState(blockpos);
 
 						if (state.getBlock().canBeReplacedByLeaves(state, world, blockpos)) {
@@ -77,30 +77,30 @@ public class TreeGenPine extends TreeGenAbstract {
 				}
 			}
 
-			if (i3 >= j3) {
-				i3 = k3;
-				k3 = 1;
-				++j3;
+			if (leafSpan >= someI) {
+				leafSpan = someII;
+				someII = 1;
+				++someI;
 
-				if (j3 > l) {
-					j3 = l;
+				if (someI > l) {
+					someI = l;
 				}
 			} else {
-				++i3;
+				++leafSpan;
 			}
 		}
 	}
 
 	@Override
 	public void generateLogs(World world, BlockPos pos, int treeHeight, Random rand) {
-		int i4 = rand.nextInt(3);
+		int randomHeightMod = rand.nextInt(description.maxHeight - description.minHeight);
 
-		for (int k4 = 0; k4 < treeHeight - i4; ++k4) {
-			BlockPos upN = pos.up(k4);
+		for (int hi = 0; hi < treeHeight - randomHeightMod; ++hi) {
+			BlockPos upN = pos.up(hi);
 			IBlockState state = world.getBlockState(upN);
 
 			if (state.getBlock().isAir(state, world, upN) || state.getBlock().isLeaves(state, world, upN)) {
-				this.setBlockAndNotifyAdequately(world, pos.up(k4), PlaintextId.getBlockStateFrom(description.log));
+				this.setBlockAndNotifyAdequately(world, pos.up(hi), PlaintextId.getBlockStateFrom(description.log));
 			}
 		}
 	}
