@@ -4,9 +4,7 @@ import java.util.*;
 
 import net.minecraft.block.*;
 import net.minecraft.block.material.*;
-import net.minecraft.block.properties.*;
 import net.minecraft.block.state.*;
-import net.minecraft.init.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.*;
 import us.timinc.jsonifycraft.json.behavior.*;
@@ -167,21 +165,6 @@ public class TreeGenOak extends TreeGenAbstract {
 					}
 				}
 			}
-		}
-	}
-
-	private void addVine(World worldIn, BlockPos pos, PropertyBool prop) {
-		this.setBlockAndNotifyAdequately(worldIn, pos,
-				Blocks.VINE.getDefaultState().withProperty(prop, Boolean.valueOf(true)));
-	}
-
-	private void addHangingVine(World worldIn, BlockPos pos, PropertyBool prop) {
-		this.addVine(worldIn, pos, prop);
-		int i = description.minHeight - 1;
-
-		for (BlockPos blockpos = pos.down(); worldIn.isAirBlock(blockpos) && i > 0; --i) {
-			this.addVine(worldIn, blockpos, prop);
-			blockpos = blockpos.down();
 		}
 	}
 }
