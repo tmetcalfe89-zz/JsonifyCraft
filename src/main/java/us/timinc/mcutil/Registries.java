@@ -764,6 +764,7 @@ public class Registries {
 
 	private void registerDefaultTreeGenerators() {
 		registerTreeGenerator("oak", TreeGenOak.class);
+		registerTreeGenerator("birch", TreeGenOak.class);
 		registerTreeGenerator("spruce", TreeGenPine.class);
 	}
 }
