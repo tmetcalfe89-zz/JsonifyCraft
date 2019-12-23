@@ -2,6 +2,6 @@ This is the original JsonifyCraft. **This version is retired and a replacement i
 
 Here is a list of new versions for each of the Minecraft versions:
 
-[JsonifyCraft-1.12](https://github.com/tmetcalfe89/JsonifyCraft-1.12)
-[JsonifyCraft-1.14](https://github.com/tmetcalfe89/JsonifyCraft-1.14)
-[JsonifyCraft-1.15](https://github.com/tmetcalfe89/JsonifyCraft-1.15)
+* [JsonifyCraft-1.12](https://github.com/tmetcalfe89/JsonifyCraft-1.12)
+* [JsonifyCraft-1.14](https://github.com/tmetcalfe89/JsonifyCraft-1.14)
+* [JsonifyCraft-1.15](https://github.com/tmetcalfe89/JsonifyCraft-1.15)
